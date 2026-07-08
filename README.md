@@ -10,11 +10,11 @@ Simulate a realistic SSH brute-force attack against a lab target, then build, tu
 
 | Component | Details |
 |---|---|
-| Wazuh Manager/Indexer/Dashboard | Docker single-node deployment, v4.14.5 |
-| Host | Lenovo T490, Ubuntu, 16GB RAM |
+| Wazuh Manager/Indexer/Dashboard | Docker single-node deployment,  |
+| Host |  Ubuntu, 16GB RAM |
 | Attack Source | Bash script using sshpass |
 | Target | Ubuntu VM (SSH server) |
-| Base Detection Rule | 5760 (SSH authentication failure — verify per-instance via `wazuh-logtest`, version-dependent) |
+| Base Detection Rule | 5760 (SSH authentication failure ) |
 | Custom Rule ID | 100010 |
 
 ```
@@ -32,7 +32,7 @@ Simulate a realistic SSH brute-force attack against a lab target, then build, tu
 
 ##  Attack Simulation
 
-A bash script using `sshpass` performs repeated failed SSH login attempts against the target, followed by one successful login using the correct credentials — modeling a realistic brute-force-then-compromise scenario.
+A bash script using `sshpass` performs repeated failed SSH login attempts against the target, followed by one successful login using the correct credentials .
 
 ```bash
 #!/bin/bash
@@ -43,7 +43,7 @@ A bash script using `sshpass` performs repeated failed SSH login attempts agains
 TARGET="192.168.x.x"
 USER="Ayan"
 WRONG_PASSWORDS=("password123" "admin123" "letmein" "qwerty123" "test1234")
-CORRECT_PASSWORD="<lab_correct_password>"
+CORRECT_PASSWORD="<Khan>"
 
 for pass in "${WRONG_PASSWORDS[@]}"; do
     echo "[*] Trying password: $pass"
@@ -57,9 +57,9 @@ sshpass -p "$CORRECT_PASSWORD" ssh -o StrictHostKeyChecking=no "$USER@$TARGET" e
 
 Each failed attempt generates a Linux auth log entry, ingested by the Wazuh agent and matched against base rule `5760`.
 
-## 🔍 Custom Detection Rule
+## Custom Detection Rule
 
-`local_rules.xml` (path inside container volume: `/var/lib/docker/volumes/single-node_wazuh_etc/_data/rules/`):
+`local_rules.xml` 
 
 ```xml
 <group name="local,ssh_bruteforce,">
@@ -112,7 +112,7 @@ Each failed attempt generates a Linux auth log entry, ingested by the Wazuh agen
     └── attack-sequence.png
 ```
 
-## 🧰 Environment
+##  Environment
 
 - Wazuh 4.14.5 (Docker single-node)
 - Ubuntu (host + target)
