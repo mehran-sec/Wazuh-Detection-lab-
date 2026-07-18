@@ -3,8 +3,8 @@
 A home SOC lab for hands-on detection engineering practice using Wazuh. This repo documents custom detection rules built, tested, and validated against simulated attack scenarios
 
 ## Objective
+Practice detection engineering hands-on by simulating real attack  building custom Wazuh rules to detect them, and validating the full pipeline from attack to dashboard alert , with each detection mapped to its MITRE ATT&CK technique.
 
-Simulate a realistic SSH brute-force attack against a lab target, then build, tune, and validate a custom Wazuh detection rule that fires on repeated authentication failures and correlates them against a successful login — closing the full attack-to-detection loop.
 
 ## Lab Architecture
 
