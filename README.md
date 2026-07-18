@@ -16,7 +16,7 @@ Simulate a realistic SSH brute-force attack against a lab target, then build, tu
 
 
 ```
-[Ubuntu/kali] --> [Ubuntu Target/window] --auth logs--> [Wazuh Agent ]
+[Ubuntu/kali] --> [Ubuntu Target/window] --auth logs--> [Wazuh Agent (ossec.conf)]
                                                                         |
                                                                         v
                                                               [Wazuh Manager (Ossec.conf)]
@@ -141,13 +141,11 @@ echo " MEHRAN KHAN " >> /home/fim_test/testfile.txt
 ```
 .
 ├── README.md
-├── scripts/
-│   └── ssh_bruteforce_sim.sh
 ├── rules/
 │   └── local_rules.xml
 └── screenshots/
-    ├── alert-100010.png
-    └── attack-sequence.png
+    ├── FIM.png
+    └── SSH_Brute F.png
 ```
 
 ##  Environment
