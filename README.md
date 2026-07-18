@@ -98,7 +98,7 @@ sshpass -p "$CORRECT_PASSWORD" ssh -o StrictHostKeyChecking=no "$USER@$TARGET" e
 FIM detects unauthorized or unexpected changes to files on monitored paths — creation, modification, deletion, or attribute changes — by tracking checksums and metadata over time. 
 
 ### Configuration
-Added `/home/fim_test` as a monitored directory in `ossec.conf` with realtime monitoring enabled:
+Added `/home/fim_test` as a monitored directory in `ossec.conf` (var/ossec/etc/ossec.conf) with realtime monitoring enabled:
 
 ```xml
 <syscheck>
@@ -108,9 +108,10 @@ Added `/home/fim_test` as a monitored directory in `ossec.conf` with realtime mo
 
 ### Simulation
 Modified a test file inside the monitored directory to trigger a checksum change:
+Added a file & Deleted a file inside the monitered directory to trigger the alert
 
 ```bash
-echo "additional content" >> /home/fim_test/testfile.txt
+echo " MEHRAN KHAN " >> /home/fim_test/testfile.txt
 ```
 
 ### Detection 
@@ -119,7 +120,7 @@ echo "additional content" >> /home/fim_test/testfile.txt
 3. The log confirmed the specific attributes that changed — size (14 → 23 bytes), modification time, and md5/sha1/sha256 checksums (old vs. new).
 4. Confirmed the alert appeared in the Wazuh Dashboard with the correct rule, file path, and change details.
 
-<img src="Screenshot/FIM.png" alt="FIM Detection" width="600">
+<img src="Screanshot/FIM.png" alt="FIM Detection" width="600">
 
 ### MITRE ATT&CK Mapping
 
