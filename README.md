@@ -1,6 +1,6 @@
-# SSH Brute-Force Attack Simulation & Detection with Wazuh
+# Wazuh Detection Lab
 
-Custom Wazuh correlation rule built and validated to detect SSH brute-force attempts, including a full attack simulation using `sshpass` against a live Ubuntu target.
+A home SOC lab for hands-on detection engineering practice using Wazuh. This repo documents custom detection rules built, tested, and validated against simulated attack scenarios
 
 ## Objective
 
@@ -12,25 +12,24 @@ Simulate a realistic SSH brute-force attack against a lab target, then build, tu
 |---|---|
 | Wazuh Manager/Indexer/Dashboard | Docker single-node deployment,  |
 | Host |  Ubuntu, 16GB RAM |
-| Attack Source | Bash script using sshpass |
 | Target | Ubuntu VM (SSH server) |
-| Base Detection Rule | 5760 (SSH authentication failure ) |
-| Custom Rule ID | 100010 |
+
 
 ```
-[Attacker Script] --sshpass/SSH--> [Ubuntu Target] --auth logs--> [Wazuh Agent]
+[Ubuntu/kali] --> [Ubuntu Target/window] --auth logs--> [Wazuh Agent ]
                                                                         |
                                                                         v
-                                                              [Wazuh Manager: rule 5760]
+                                                              [Wazuh Manager (Ossec.conf)]
                                                                         |
                                                                         v
-                                                        [Custom Rule 100010: frequency correlation]
+                                                               [Custom Rules (local_rules.xml)]
                                                                         |
                                                                         v
                                                               [Wazuh Dashboard Alert]
 ```
+## Detection 1 : SSH Brute-force 
 
-##  Attack Simulation
+### Attack Simulation
 
 A bash script using `sshpass` performs repeated failed SSH login attempts against the target, followed by one successful login using the correct credentials .
 
@@ -85,7 +84,6 @@ sshpass -p "$CORRECT_PASSWORD" ssh -o StrictHostKeyChecking=no "$USER@$TARGET" e
 
 
 <img src="Screanshot/SSH Brute F.png"  alt="SSH Detection" width="600">
-*(Insert dashboard screenshots here: `screenshots/alert-100010.png`, `screenshots/attack-sequence.png`)*
 
 ##  MITRE ATT&CK Mapping
 
@@ -93,6 +91,43 @@ sshpass -p "$CORRECT_PASSWORD" ssh -o StrictHostKeyChecking=no "$USER@$TARGET" e
 |---|---|---|
 | Brute Force: Password Guessing | T1110.001 | Core technique simulated and detected |
 | Valid Accounts | T1078 | Represented by the final successful login |
+
+
+## Detection 2 : File integrity Monitoring (FIM)
+
+FIM detects unauthorized or unexpected changes to files on monitored paths — creation, modification, deletion, or attribute changes — by tracking checksums and metadata over time. 
+
+### Configuration
+Added `/home/fim_test` as a monitored directory in `ossec.conf` with realtime monitoring enabled:
+
+```xml
+<syscheck>
+  <directories realtime="yes" report_changes="yes">/home/fim_test</directories>
+</syscheck>
+```
+
+### Simulation
+Modified a test file inside the monitored directory to trigger a checksum change:
+
+```bash
+echo "additional content" >> /home/fim_test/testfile.txt
+```
+
+### Detection 
+1. Wazuh's `syscheck` picked up the change in realtime mode on `/home/fim_test/testfile.txt`.
+2. The event was decoded by `syscheck_integrity_changed` and matched rule `550` ("Integrity checksum changed"), level 7.
+3. The log confirmed the specific attributes that changed — size (14 → 23 bytes), modification time, and md5/sha1/sha256 checksums (old vs. new).
+4. Confirmed the alert appeared in the Wazuh Dashboard with the correct rule, file path, and change details.
+
+<img src="Screenshot/FIM.png" alt="FIM Detection" width="600">
+
+### MITRE ATT&CK Mapping
+
+| Technique | ID | Notes |
+|---|---|---|
+| Stored Data Manipulation | T1565.001 | File content modified in a monitored path, detected via checksum/attribute change |
+
+
 
 ##  Next Steps
 
@@ -118,6 +153,8 @@ sshpass -p "$CORRECT_PASSWORD" ssh -o StrictHostKeyChecking=no "$USER@$TARGET" e
 
 - Wazuh 4.14.5 (Docker single-node)
 - Ubuntu (host + target)
+- Kali vm
+- windows vm
 - `sshpass`
 
 ---
