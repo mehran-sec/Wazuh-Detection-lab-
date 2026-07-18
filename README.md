@@ -84,7 +84,7 @@ sshpass -p "$CORRECT_PASSWORD" ssh -o StrictHostKeyChecking=no "$USER@$TARGET" e
 4. Followed with a successful login and confirmed the Wazuh Dashboard showed the full sequence: multiple `5760` alerts → `100010` correlation alert → successful auth event.
 
 
-<img src="Screanshot/SSH_Brute_F.png"  alt="SSH Detection" width="600">
+<img src="Screanshot/SSH Brute F.png"  alt="SSH Detection" width="600">
 *(Insert dashboard screenshots here: `screenshots/alert-100010.png`, `screenshots/attack-sequence.png`)*
 
 ##  MITRE ATT&CK Mapping
