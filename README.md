@@ -55,7 +55,6 @@ echo "[*] Attempting correct login..."
 sshpass -p "$CORRECT_PASSWORD" ssh -o StrictHostKeyChecking=no "$USER@$TARGET" exit
 ```
 
-Each failed attempt generates a Linux auth log entry, ingested by the Wazuh agent and matched against base rule `5760`.
 
 ## Custom Detection Rule
 
@@ -76,6 +75,7 @@ Each failed attempt generates a Linux auth log entry, ingested by the Wazuh agen
 
 **Logic:** the rule fires when 5 or more events matching base rule `5760` occur from the same source within a 120-second window — a frequency-based correlation rather than a single-event match, reducing false positives from occasional typos.
 
+
 ## Validation
 
 1. Ran `sshpass`-driven failed login attempts against the target.
@@ -83,6 +83,8 @@ Each failed attempt generates a Linux auth log entry, ingested by the Wazuh agen
 3. Confirmed rule `100010` triggered after the 5th failure within the timeframe.
 4. Followed with a successful login and confirmed the Wazuh Dashboard showed the full sequence: multiple `5760` alerts → `100010` correlation alert → successful auth event.
 
+
+<img src="Screanshot/SSH_Brute_F.png"  alt="SSH Detection" width="600">
 *(Insert dashboard screenshots here: `screenshots/alert-100010.png`, `screenshots/attack-sequence.png`)*
 
 ##  MITRE ATT&CK Mapping
