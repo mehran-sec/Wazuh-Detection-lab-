@@ -11,12 +11,13 @@ Practice detection engineering hands-on by simulating real attacks, building cus
 
 
 ```mermaid
-flowchart LR
-    A[Kali - Attacker] -->|SSH brute-force via Hydra| B[Ubuntu Target<br/>SSH Server]
-    B -->|auth logs| C[Wazuh Agent<br/>ossec.conf]
-    C --> D[Wazuh Manager<br/>ossec.conf]
-    D --> E[Custom Rules<br/>local_rules.xml]
-    E --> F[Wazuh Dashboard Alert]
+
+graph TD
+    A[Kali Linux Attacker] -->|SSH Brute Force| B[Ubuntu SSH Server]
+    B -->|Auth Logs| C[Wazuh Agent]
+    C -->|Events| D[Wazuh Manager]
+    D -->|Detection| E[Custom Wazuh Rule]
+    E -->|Alert| F[Wazuh Dashboard]
 ```
 
 
